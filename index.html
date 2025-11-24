@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BridgeSense — BHS & Curve Safety</title>
+  <link rel="icon" href="logo.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <header class="app">
+      <div class="brand">
+        <!-- Your logo (80x80, neatly contained). Put logo.png in this same folder -->
+        <a href="#bhs" class="logo-wrap" aria-label="BridgeSense">
+          <img src="logo.png" alt="BridgeSense logo" class="logo-img" onerror="this.style.display='none'">
+        </a>
+        <div class="title">
+          <h1>BridgeSense — Bridge Health & Curve Safety</h1>
+          <p class="lead">Dark, clean UI for BalVigyan: compute BHS, check curve safety, and show charts.</p>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#bhs" data-page="bhs" class="active">BHS Inputs</a>
+        <a href="#curve" data-page="curve">Curve Safety</a>
+        <a href="#summary" data-page="summary">Summary & Charts</a>
+      </nav>
+    </header>
+
+    <!-- Page: BHS -->
+    <section id="page-bhs" class="page active">
+      <section class="card">
+        <h3>1. Bridge Health Score (BHS) — Inputs</h3>
+
+        <div class="field">
+          <label>Bridge Name</label>
+          <input id="bridgeName" type="text" placeholder="e.g. NH-4 River Bridge" />
+        </div>
+
+        <div class="two-col">
+          <div class="field">
+            <label>Age (years)</label>
+            <input id="age" type="number" min="0" value="25" />
+          </div>
+          <div class="field">
+            <label>Visible Crack Length (cm)</label>
+            <input id="crack" type="number" min="0" value="2" />
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="field">
+            <label>Actual Load (tonnes)</label>
+            <input id="actualLoad" type="number" min="0" value="120" />
+          </div>
+          <div class="field">
+            <label>Design Load (tonnes)</label>
+            <input id="designLoad" type="number" min="1" value="150" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Years exposed to harsh environment (coastal/flood)</label>
+          <input id="envYears" type="number" value="5" min="0" />
+          <div class="help">This BHS uses weighted scores for Age, Crack, Load, Environment. All math is transparent in app.js.</div>
+        </div>
+
+        <div class="actions">
+          <button class="btn" id="btnComputeBHS">Compute BHS</button>
+          <div id="bhsOutput"></div>
+          <div id="condOutput"></div>
+        </div>
+
+        <div id="toastBHS" class="toast"></div>
+      </section>
+    </section>
+
+    <!-- Page: Curve -->
+    <section id="page-curve" class="page">
+      <section class="card">
+        <h3>2. Curve Safety — Radius Check</h3>
+        <p class="muted">Simple curvature index (demo): Index = (V / R) × 10. Index ≤ 6 Safe, ≤ 12 Moderate, else Unsafe.</p>
+
+        <div class="row mt10">
+          <div class="field">
+            <label>Existing Radius R (m)</label>
+            <input id="curveR" type="number" value="30" />
+          </div>
+          <div class="field">
+            <label>Design/Typical Speed V (km/h)</label>
+            <input id="curveV" type="number" value="40" />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn" id="btnCurve">Check Curve</button>
+          <div id="curveOutput"></div>
+          <span class="pill" id="curveSafeSpeed">—</span>
+        </div>
+
+        <hr class="sep" />
+        <small class="muted">Educational demo. For design, use IRC formulas and professional review.</small>
+
+        <div id="toastCurve" class="toast"></div>
+      </section>
+    </section>
+
+    <!-- Page: Summary -->
+    <section id="page-summary" class="page">
+      <div class="grid">
+        <section class="card">
+          <h3>Summary</h3>
+          <table>
+            <tbody>
+              <tr><th>Bridge</th><td id="s_name">—</td></tr>
+              <tr><th>BHS</th><td id="s_bhs">—</td></tr>
+              <tr><th>Condition</th><td id="s_cond">—</td></tr>
+              <tr><th>Curve Safe Speed</th><td id="s_speed">—</td></tr>
+            </tbody>
+          </table>
+          <div id="noDataNote" class="toast" style="display:none">No data yet — fill BHS and Curve pages.</div>
+        </section>
+
+        <aside class="card">
+          <h3>Charts</h3>
+          <canvas id="bhsChart" style="margin-top:12px;max-width:100%" height="200"></canvas>
+          <div class="chart-note">Bar chart compares parameter scores — easy to explain to judges.</div>
+        </aside>
+      </div>
+    </section>
+
+    <footer class="site">© 2025 BridgeSense · BalVigyan | Atma Nirbhar Bharat</footer>
+  </div>
+</body>
+</html>
